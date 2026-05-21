@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}PareFreio | Peças para Freios, Direção e Embreagem{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content" data-aos="fade-up">
+        <div class="hero-brandline" aria-label="PareFreio">
+            <span class="brand-symbol real-logo medium" aria-hidden="true">
+                <span class="traffic-light">
+                    <span class="light red"></span>
+                    <span class="light yellow"></span>
+                    <span class="light green"></span>
+                </span>
+            </span>
+            <span class="poster-word">
+                <span class="pare">PARE</span><span class="freio">FREIO</span>
+            </span>
+        </div>
+        <p class="eyebrow">Loja especializada em peças automotivas</p>
+        <h1>Especialistas em freios, direção, suspensão e embreagem</h1>
+        <p class="hero-copy">Peças com procedência, atendimento rápido e orientação para você comprar a aplicação correta para o seu veículo.</p>
+        <div class="hero-actions">
+            <a class="btn primary" href="{{ url_for('contato') }}">Solicitar orçamento</a>
+            <a class="btn ghost" href="https://api.whatsapp.com/send?phone=5511962658271&text=Ol%C3%A1,%20quero%20consultar%20uma%20pe%C3%A7a%20na%20PareFreio.">Falar no WhatsApp</a>
+        </div>
+    </div>
+    <div class="hero-panel" data-aos="zoom-in">
+        <div class="poster-logo" aria-label="PareFreio">
+            <span class="brand-symbol real-logo large" aria-hidden="true">
+                <span class="traffic-light">
+                    <span class="light red"></span>
+                    <span class="light yellow"></span>
+                    <span class="light green"></span>
+                </span>
+            </span>
+            <span class="poster-word">
+                <span class="pare">PARE</span><span class="freio">FREIO</span>
+            </span>
+        </div>
+        <p class="poster-subtitle">PEÇAS E SERVIÇOS AUTOMOTIVOS</p>
+        <p class="poster-lines">Pinças - caixas de direção - terminais - hidrovácuos - suspensão - embreagem</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <p class="eyebrow">Catálogo rápido</p>
+        <h2>Principais linhas de peças</h2>
+    </div>
+    <div class="card-grid">
+        {% for service in services %}
+        <article class="feature-card" data-aos="fade-up">
+            <h3>{{ service.title }}</h3>
+            <p>{{ service["items"] | join(" - ") }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section split-section">
+    <div data-aos="fade-up">
+        <p class="eyebrow">Por que escolher</p>
+        <h2>Compra mais segura, atendimento direto e peça certa</h2>
+    </div>
+    <div class="benefits" data-aos="fade-up">
+        <span>Atendimento rápido</span>
+        <span>Peças de qualidade</span>
+        <span>Especialistas automotivos</span>
+        <span>Consulta por modelo e ano</span>
+        <span>Preço justo</span>
+        <span>Venda pelo WhatsApp</span>
+    </div>
+</section>
+
+<section class="section dark-band">
+    <div class="section-heading">
+        <p class="eyebrow">Produtos em destaque</p>
+        <h2>Peças procuradas pelos clientes</h2>
+    </div>
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card" data-aos="fade-up">
+            <div class="product-img">{{ product.category }}</div>
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <small>{{ product.compatibility }}</small>
+            <a class="text-link" href="https://api.whatsapp.com/send?phone=5511962658271&text=Ol%C3%A1,%20quero%20consultar%20{{ product.name | urlencode }}.">Consultar no WhatsApp</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-heading">
+        <p class="eyebrow">Clientes</p>
+        <h2>Avaliações</h2>
+    </div>
+    <div class="reviews">
+        <article data-aos="fade-up"><strong>★★★★★</strong><p>"Atendimento rápido e peça certa para meu carro."</p></article>
+        <article data-aos="fade-up"><strong>★★★★★</strong><p>"Equipe muito atenciosa no WhatsApp."</p></article>
+        <article data-aos="fade-up"><strong>★★★★★</strong><p>"Boa variedade de freios e direção."</p></article>
+    </div>
+</section>
+
+<section class="map-section">
+    <iframe title="Mapa PareFreio" src="https://www.google.com/maps?q=Rua%20R%20Giosue%20Carducci%2C%2010&output=embed" loading="lazy"></iframe>
+</section>
+{% endblock %}

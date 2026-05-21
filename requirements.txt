@@ -1,0 +1,5 @@
+Flask==2.2.5
+Werkzeug==2.2.3
+PyMySQL==1.1.1
+python-dotenv==0.21.1
+gunicorn==21.2.0

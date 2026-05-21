@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Contato | PareFreio{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <p class="eyebrow">Atendimento</p>
+    <h1>Fale com a PareFreio</h1>
+    <p>Envie sua dúvida ou consulte uma peça pelo WhatsApp.</p>
+</section>
+
+<section class="section contact-layout">
+    <form class="contact-form" data-contact-form>
+        <label>Nome<input name="nome" required placeholder="Seu nome"></label>
+        <label>WhatsApp<input name="telefone" required placeholder="(11) 99999-9999"></label>
+        <label>E-mail<input name="email" type="email" placeholder="voce@email.com"></label>
+        <label>Veículo<input name="veiculo" placeholder="Ex: Gol G5 1.0 2012"></label>
+        <label>Mensagem<textarea name="mensagem" required placeholder="Qual peça você procura?"></textarea></label>
+        <button class="btn primary" type="submit">Enviar e abrir WhatsApp</button>
+        <p class="form-status" data-form-status></p>
+    </form>
+
+    <aside class="contact-card">
+        <h2>Informações</h2>
+        <p><strong>WhatsApp:</strong> <a href="https://api.whatsapp.com/send?phone=5511962658271">(11) 96265-8271</a></p>
+        <p><strong>Endereço:</strong> Rua R Giosue Carducci, 10</p>
+        <p><strong>Atendimento:</strong> consulte horário pelo WhatsApp</p>
+    </aside>
+</section>
+
+<section class="map-section">
+    <iframe title="Mapa PareFreio" src="https://www.google.com/maps?q=Rua%20R%20Giosue%20Carducci%2C%2010&output=embed" loading="lazy"></iframe>
+</section>
+{% endblock %}

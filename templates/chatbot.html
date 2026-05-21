@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Chatbot | PareFreio{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <p class="eyebrow">Assistente automático</p>
+    <h1>Chatbot PareFreio</h1>
+    <p>Tire dúvidas rápidas sobre produtos, orçamento, localização e contato.</p>
+</section>
+
+<section class="section chat-shell">
+    <div class="chat-window" data-chat>
+        <div class="chat-messages" data-chat-messages></div>
+        <form class="chat-input" data-chat-form>
+            <input data-chat-input placeholder="Digite sua pergunta ou escolha 1, 2, 3 ou 4" autocomplete="off">
+            <button class="btn primary compact" type="submit">Enviar</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

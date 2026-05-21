@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="PareFreio: loja especializada em peças automotivas para freios, direção, suspensão e embreagem em São Paulo."
+    />
+    <meta
+      name="keywords"
+      content="PareFreio, peças automotivas, freios, caixa de direção, hidrovácuo, embreagem, bandejas, São Paulo"
+    />
+    <meta name="theme-color" content="#050505" />
+    <title>{% block title %}PareFreio | Peças Automotivas{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <a
+        class="brand"
+        href="{{ url_for('index') }}"
+        aria-label="PareFreio Home"
+      >
+        <span class="brand-symbol real-logo compact" aria-hidden="true">
+          <span class="traffic-light">
+            <span class="light red"></span>
+            <span class="light yellow"></span>
+            <span class="light green"></span>
+          </span>
+        </span>
+        <span class="brand-word">
+          <strong
+            ><span class="pare">PARE</span
+            ><span class="freio">FREIO</span></strong
+          >
+          <small>Peças automotivas</small>
+        </span>
+      </a>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        data-nav-toggle
+      >
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" data-nav>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('produtos') }}">Produtos</a>
+        <a href="{{ url_for('servicos') }}">Categorias</a>
+        <a href="{{ url_for('chatbot') }}">Chatbot</a>
+        <a href="{{ url_for('contato') }}">Contato</a>
+      </nav>
+    </header>
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <a
+      class="whatsapp-float"
+      href="https://api.whatsapp.com/send?phone=5511962658271&text=Ol%C3%A1,%20quero%20consultar%20uma%20pe%C3%A7a%20na%20PareFreio."
+      aria-label="Falar no WhatsApp"
+    >
+      WhatsApp
+    </a>
+
+    <footer class="site-footer">
+      <div>
+        <strong>PareFreio</strong>
+        <p>Peças automotivas para freios, direção, suspensão e embreagem.</p>
+      </div>
+      <div>
+        <p>Rua R Giosue Carducci, 10</p>
+        <p>WhatsApp: (11) 96265-8271</p>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

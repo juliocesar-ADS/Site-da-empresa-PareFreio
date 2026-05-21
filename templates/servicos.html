@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Categorias de Peças | PareFreio{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <p class="eyebrow">Linhas de venda</p>
+    <h1>Categorias de peças</h1>
+    <p>A PareFreio vende peças automotivas. Não realizamos mão de obra, instalação ou manutenção.</p>
+</section>
+
+<section class="section">
+    <div class="category-list">
+        {% for service in services %}
+        <article class="category-card" data-aos="fade-up">
+            <h2>{{ service.title }}</h2>
+            <ul>
+                {% for item in service["items"] %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

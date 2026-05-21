@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Produtos | PareFreio{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <p class="eyebrow">Catálogo</p>
+    <h1>Produtos automotivos</h1>
+    <p>Consulte disponibilidade pelo WhatsApp informando modelo, ano, motor e a peça desejada.</p>
+</section>
+
+<section class="section">
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="product-card" data-aos="fade-up">
+            <div class="product-img">{{ product.category }}</div>
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+            <small>{{ product.compatibility }}</small>
+            <a class="btn primary compact" href="https://api.whatsapp.com/send?phone=5511962658271&text=Ol%C3%A1,%20tenho%20interesse%20em%20{{ product.name | urlencode }}.">Consultar peça</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
