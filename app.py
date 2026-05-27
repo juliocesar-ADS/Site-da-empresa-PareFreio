@@ -4,33 +4,40 @@ from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
-import pymysql
-
 
 load_dotenv()
 
 app = Flask(__name__)
 
-app.config["MYSQL_HOST"] = os.getenv("MYSQL_HOST", "localhost")
-app.config["MYSQL_USER"] = os.getenv("MYSQL_USER", "root")
-app.config["MYSQL_PASSWORD"] = os.getenv("MYSQL_PASSWORD", "")
-app.config["MYSQL_DB"] = os.getenv("MYSQL_DB", "parefreio")
+# Configurações do banco (opcionais)
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_DB = os.getenv("MYSQL_DB")
 
+DB_AVAILABLE = all([MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB])
 
 def get_connection():
-    return pymysql.connect(
-        host=app.config["MYSQL_HOST"],
-        user=app.config["MYSQL_USER"],
-        password=app.config["MYSQL_PASSWORD"],
-        database=app.config["MYSQL_DB"],
-        charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor,
-    )
+    if not DB_AVAILABLE:
+        return None
+    try:
+        import pymysql
+        return pymysql.connect(
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            database=MYSQL_DB,
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor,
+        )
+    except Exception as exc:
+        app.logger.warning("Não foi possível conectar ao banco: %s", exc)
+        return None
 
 
 PRODUCTS = [
     {
-        "name": "Pincas Dianteiras e Traseiras",
+        "name": "Pinças Dianteiras e Traseiras",
         "category": "Freios",
         "description": "Pinças de freio dianteiras e traseiras para diversas aplicações.",
         "compatibility": "Consultar por modelo, ano e motorização.",
@@ -91,7 +98,6 @@ PRODUCTS = [
     },
 ]
 
-
 SERVICES = [
     {
         "title": "Freios",
@@ -113,8 +119,11 @@ SERVICES = [
 
 
 def save_lead(data):
+    connection = get_connection()
+    if not connection:
+        app.logger.warning("Banco indisponível, lead não salvo.")
+        return False
     try:
-        connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute(
                 """
@@ -131,12 +140,13 @@ def save_lead(data):
                     datetime.utcnow(),
                 ),
             )
-        connection.commit()
-        connection.close()
+            connection.commit()
         return True
     except Exception as exc:
         app.logger.warning("Lead not saved: %s", exc)
         return False
+    finally:
+        connection.close()
 
 
 @app.route("/")
@@ -168,11 +178,11 @@ def chatbot():
 def api_contato():
     data = request.get_json(silent=True) or request.form.to_dict()
     required = ["nome", "telefone", "mensagem"]
-
     if any(not data.get(field) for field in required):
         return jsonify({"ok": False, "message": "Preencha nome, telefone e mensagem."}), 400
 
     saved = save_lead(data)
+
     whatsapp_message = quote_plus(
         f"Olá, sou {data.get('nome')} e quero atendimento da PareFreio. "
         f"Veículo: {data.get('veiculo', 'não informado')}. "
@@ -200,8 +210,8 @@ def api_orcamento():
         "embreagem": "Em embreagem, trabalhamos com kit de embreagem.",
         "suspensao": "Peças de suspensão: bandejas, buchas, pivôs e amortecedores.",
     }
-    estimativa = "Informe o sintoma ou peça desejada para indicarmos a categoria correta."
 
+    estimativa = "Informe o sintoma ou peça desejada para indicarmos a categoria correta."
     for termo, resposta in sugestoes.items():
         if termo in problema:
             estimativa = resposta
@@ -217,4 +227,4 @@ def api_orcamento():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
