@@ -5,14 +5,29 @@
 {% block content %}
 <section class="page-hero">
     <p class="eyebrow">Catálogo</p>
-    <h1>Produtos automotivos</h1>
-    <p>Consulte disponibilidade pelo WhatsApp informando modelo, ano, motor e a peça desejada.</p>
+    <h1>Peças à venda</h1>
+    <p>Encontre a categoria, veja as aplicações e peça um orçamento direto pelo WhatsApp.</p>
 </section>
 
 <section class="section">
-    <div class="product-grid">
+    <div class="catalog-toolbar" aria-label="Filtros do catálogo">
+        <label class="catalog-search">
+            Buscar peça
+            <input type="search" placeholder="Ex.: caixa de direção" data-product-search>
+        </label>
+        <label class="catalog-filter">
+            Categoria
+            <select data-product-category>
+                <option value="">Todas as categorias</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+    <div class="product-grid" data-product-grid>
         {% for product in products %}
-        <article class="product-card" data-aos="fade-up">
+        <article class="product-card" data-aos="fade-up" data-product-card data-category="{{ product.category }}" data-name="{{ product.name | lower }}">
             <div class="product-img">{{ product.category }}</div>
             <h2>{{ product.name }}</h2>
             <p>{{ product.description }}</p>
@@ -21,5 +36,6 @@
         </article>
         {% endfor %}
     </div>
+    <p class="catalog-empty" data-product-empty hidden>Nenhuma peça encontrada. Tente outro termo ou fale conosco pelo WhatsApp.</p>
 </section>
 {% endblock %}

@@ -5,6 +5,32 @@ if (navToggle && nav) {
     navToggle.addEventListener("click", () => nav.classList.toggle("open"));
 }
 
+const productSearch = document.querySelector("[data-product-search]");
+const productCategory = document.querySelector("[data-product-category]");
+const productCards = [...document.querySelectorAll("[data-product-card]")];
+const productEmpty = document.querySelector("[data-product-empty]");
+
+function filterProducts() {
+    if (!productCards.length) return;
+
+    const search = (productSearch?.value || "").trim().toLowerCase();
+    const category = productCategory?.value || "";
+    let visible = 0;
+
+    productCards.forEach((card) => {
+        const matchesSearch = !search || card.dataset.name.includes(search);
+        const matchesCategory = !category || card.dataset.category === category;
+        const shouldShow = matchesSearch && matchesCategory;
+        card.hidden = !shouldShow;
+        if (shouldShow) visible += 1;
+    });
+
+    if (productEmpty) productEmpty.hidden = visible > 0;
+}
+
+productSearch?.addEventListener("input", filterProducts);
+productCategory?.addEventListener("change", filterProducts);
+
 if (window.AOS) {
     AOS.init({ duration: 700, once: true, offset: 80 });
 }

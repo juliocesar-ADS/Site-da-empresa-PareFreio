@@ -1,5 +1,7 @@
 import os
+import sqlite3
 from datetime import datetime
+from pathlib import Path
 from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
@@ -14,26 +16,9 @@ MYSQL_HOST = os.getenv("MYSQL_HOST")
 MYSQL_USER = os.getenv("MYSQL_USER")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 MYSQL_DB = os.getenv("MYSQL_DB")
+SQLITE_PATH = Path(os.getenv("SQLITE_PATH", "database/parefreio.sqlite3"))
 
 DB_AVAILABLE = all([MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB])
-
-def get_connection():
-    if not DB_AVAILABLE:
-        return None
-    try:
-        import pymysql
-        return pymysql.connect(
-            host=MYSQL_HOST,
-            user=MYSQL_USER,
-            password=MYSQL_PASSWORD,
-            database=MYSQL_DB,
-            charset="utf8mb4",
-            cursorclass=pymysql.cursors.DictCursor,
-        )
-    except Exception as exc:
-        app.logger.warning("Não foi possível conectar ao banco: %s", exc)
-        return None
-
 
 PRODUCTS = [
     {
@@ -98,6 +83,105 @@ PRODUCTS = [
     },
 ]
 
+
+def get_mysql_connection():
+    try:
+        import pymysql
+        return pymysql.connect(
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            database=MYSQL_DB,
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor,
+        )
+    except Exception as exc:
+        app.logger.warning("Não foi possível conectar ao banco: %s", exc)
+        return None
+
+
+def get_sqlite_connection():
+    SQLITE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(SQLITE_PATH)
+    connection.row_factory = sqlite3.Row
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL UNIQUE,
+            categoria TEXT NOT NULL,
+            descricao TEXT NOT NULL,
+            compatibilidade TEXT,
+            imagem TEXT,
+            ativo INTEGER NOT NULL DEFAULT 1,
+            criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS leads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            telefone TEXT NOT NULL,
+            email TEXT,
+            veiculo TEXT,
+            mensagem TEXT NOT NULL,
+            origem TEXT DEFAULT 'site',
+            criado_em TEXT NOT NULL
+        )
+        """
+    )
+    connection.executemany(
+        """
+        INSERT OR IGNORE INTO produtos
+            (nome, categoria, descricao, compatibilidade)
+        VALUES (?, ?, ?, ?)
+        """,
+        [
+            (p["name"], p["category"], p["description"], p["compatibility"])
+            for p in PRODUCTS
+        ],
+    )
+    connection.commit()
+    return connection
+
+
+def get_products():
+    connection = get_mysql_connection() if DB_AVAILABLE else None
+    if connection:
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT nome AS name, categoria AS category, descricao AS description,
+                           compatibilidade AS compatibility
+                    FROM produtos
+                    WHERE ativo = 1
+                    ORDER BY categoria, nome
+                    """
+                )
+                return cursor.fetchall()
+        except Exception as exc:
+            app.logger.warning("Não foi possível carregar produtos do MySQL: %s", exc)
+        finally:
+            connection.close()
+
+    connection = get_sqlite_connection()
+    try:
+        rows = connection.execute(
+            """
+            SELECT nome AS name, categoria AS category, descricao AS description,
+                   compatibilidade AS compatibility
+            FROM produtos
+            WHERE ativo = 1
+            ORDER BY categoria, nome
+            """
+        ).fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        connection.close()
+
 SERVICES = [
     {
         "title": "Freios",
@@ -119,44 +203,55 @@ SERVICES = [
 
 
 def save_lead(data):
-    connection = get_connection()
-    if not connection:
-        app.logger.warning("Banco indisponível, lead não salvo.")
-        return False
+    connection = get_mysql_connection() if DB_AVAILABLE else None
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(
+        values = (
+            data.get("nome"),
+            data.get("telefone"),
+            data.get("email"),
+            data.get("veiculo"),
+            data.get("mensagem"),
+            data.get("origem", "site"),
+            datetime.utcnow(),
+        )
+        if connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO leads (nome, telefone, email, veiculo, mensagem, origem, criado_em)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    values,
+                )
+        else:
+            connection = get_sqlite_connection()
+            connection.execute(
                 """
                 INSERT INTO leads (nome, telefone, email, veiculo, mensagem, origem, criado_em)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (
-                    data.get("nome"),
-                    data.get("telefone"),
-                    data.get("email"),
-                    data.get("veiculo"),
-                    data.get("mensagem"),
-                    data.get("origem", "site"),
-                    datetime.utcnow(),
-                ),
+                values,
             )
-            connection.commit()
+        connection.commit()
         return True
     except Exception as exc:
-        app.logger.warning("Lead not saved: %s", exc)
+        app.logger.warning("Lead não salvo: %s", exc)
         return False
     finally:
-        connection.close()
+        if connection:
+            connection.close()
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", products=PRODUCTS[:4], services=SERVICES)
+    return render_template("index.html", products=get_products()[:4], services=SERVICES)
 
 
 @app.route("/produtos")
 def produtos():
-    return render_template("produtos.html", products=PRODUCTS)
+    products = get_products()
+    categories = sorted({product["category"] for product in products})
+    return render_template("produtos.html", products=products, categories=categories)
 
 
 @app.route("/servicos")

@@ -6,9 +6,10 @@ Site catálogo de peças automotivas da PareFreio, feito com Flask, MySQL, HTML,
 
 - Home premium responsiva
 - Páginas de produtos, categorias, contato e chatbot
+- Catálogo de peças carregado do banco com busca e filtro por categoria
 - Botão flutuante de WhatsApp
 - Formulário com envio para API Flask
-- Estrutura preparada para MySQL
+- Leads e produtos persistidos em MySQL ou SQLite local
 - SEO básico com metatags
 
 ## Como rodar
@@ -22,6 +23,16 @@ python app.py
 ```
 
 Abra `http://127.0.0.1:5000`.
+
+Sem MySQL configurado, o site cria automaticamente `database/parefreio.sqlite3`,
+carrega o catálogo inicial e salva os pedidos de orçamento localmente.
+
+## GitHub Pages
+
+O workflow em `.github/workflows/pages.yml` gera uma versão estática das páginas
+e publica automaticamente no GitHub Pages a cada push na branch `main`.
+No GitHub, abra **Settings > Pages**, selecione **GitHub Actions** como fonte
+de publicação e acesse a URL exibida após a primeira execução do workflow.
 
 ## Banco MySQL
 
