@@ -1,51 +1,55 @@
-# PareFreio Site
+<div align="center">
 
-Site catálogo de peças automotivas da PareFreio, feito com Flask, MySQL, HTML, CSS e JavaScript.
+# 🚗 PareFreio — Catálogo de Peças Automotivas
 
-## Recursos
+Site institucional e catálogo de peças da **PareFreio**, construído com Flask, MySQL/SQLite, HTML, CSS e JavaScript.
 
-- Home premium responsiva
-- Páginas de produtos, categorias, contato e chatbot
-- Catálogo de peças carregado do banco com busca e filtro por categoria
-- Botão flutuante de WhatsApp
-- Formulário com envio para API Flask
-- Leads e produtos persistidos em MySQL ou SQLite local
-- SEO básico com metatags
+[🌐 Acessar o site](#-link-do-site) · [⚙️ Como rodar localmente](#-como-rodar-localmente) · [🗄️ Banco de dados](#-banco-de-dados)
 
-## Como rodar
+</div>
 
-```powershell
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-copy .env.example .env
-python app.py
-```
+---
 
-Abra `http://127.0.0.1:5000`.
+## 🔗 Link do site
 
-Sem MySQL configurado, o site cria automaticamente `database/parefreio.sqlite3`,
-carrega o catálogo inicial e salva os pedidos de orçamento localmente.
+(https://juliocesar-ads.github.io/Site-da-empresa-PareFreio/)
 
-## GitHub Pages
 
-O workflow em `.github/workflows/pages.yml` gera uma versão estática das páginas
-e publica automaticamente no GitHub Pages a cada push na branch `main`.
-No GitHub, abra **Settings > Pages**, selecione **GitHub Actions** como fonte
-de publicação e acesse a URL exibida após a primeira execução do workflow.
+## ✨ Funcionalidades
 
-## Banco MySQL
+| Recurso | Descrição |
+| --- | --- |
+| 🏠 Home premium | Landing page responsiva e otimizada para conversão |
+| 🛒 Catálogo dinâmico | Peças carregadas do banco com **busca** e **filtro por categoria** |
+| 📄 Páginas completas | Produtos, categorias, contato e chatbot |
+| 💬 WhatsApp flutuante | Botão fixo para atendimento direto pelo app |
+| 📨 Formulário de orçamento | Envia para a API Flask e persiste o lead no banco |
+| 🤖 Chatbot | Atendimento automatizado no site |
+| 🔍 SEO básico | Metatags configuradas nas páginas principais |
+| 🗄️ Persistência flexível | MySQL em produção ou SQLite (`database/parefreio.sqlite3`) em desenvolvimento |
 
-Crie o banco e as tabelas com:
+---
 
-```powershell
-mysql -u root -p < database/schema.sql
-```
+## 🧰 Stack
 
-Depois ajuste o arquivo `.env` com usuário, senha, host e banco.
+- **Backend:** Python + Flask
+- **Banco:** MySQL (produção) / SQLite (local)
+- **Frontend:** HTML5, CSS3, JavaScript
+- **Deploy:** GitHub Actions → GitHub Pages
+- **Automação:** Scripts de geração de catálogo estático em `scripts/`
 
-## Observação comercial
+---
 
-O conteúdo foi ajustado para posicionar a PareFreio como loja de peças automotivas. O site não promete instalação, manutenção ou mão de obra.
- 
-feito com ajuda do codex
+## 📁 Estrutura do projeto
+
+```text
+.
+├── .github/workflows/   # CI/CD: build estático + publicação no Pages
+├── database/            # schema.sql e banco SQLite local
+├── scripts/             # Geração do catálogo e build das páginas
+├── static/              # CSS, JS e imagens
+├── templates/           # Templates Jinja2 (Flask)
+├── app.py               # Aplicação Flask e rotas da API
+├── requirements.txt     # Dependências
+├── Procfile             # Deploy em PaaS (Heroku/Railway)
+└── .env.example         # Variáveis de ambiente de exemplo
