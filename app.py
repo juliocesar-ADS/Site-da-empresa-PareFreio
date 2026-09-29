@@ -1,3 +1,4 @@
+import hashlib
 import os
 import sqlite3
 from datetime import datetime
@@ -10,6 +11,10 @@ from flask import Flask, jsonify, render_template, request
 load_dotenv()
 
 app = Flask(__name__)
+STYLE_VERSION = hashlib.sha256(
+    (Path(__file__).resolve().parent / "static" / "css" / "style.css").read_bytes()
+).hexdigest()[:12]
+app.jinja_env.globals["style_version"] = STYLE_VERSION
 
 # Configurações do banco (opcionais)
 MYSQL_HOST = os.getenv("MYSQL_HOST")
