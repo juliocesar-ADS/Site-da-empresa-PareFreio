@@ -61,6 +61,8 @@
         <a href="{{ url_for('servicos') }}">Categorias</a>
         <a href="{{ url_for('chatbot') }}">Chatbot</a>
         <a href="{{ url_for('contato') }}">Contato</a>
+        <a href="{{ url_for('conta') }}">Entrar / Criar conta</a>
+        <a href="{{ url_for('admin') }}" data-owner-link hidden>Painel do dono</a>
       </nav>
     </header>
 
@@ -86,6 +88,8 @@
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/supabase-config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/supabase-app.js') }}"></script>
   </body>
 </html>

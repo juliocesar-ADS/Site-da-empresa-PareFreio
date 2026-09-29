@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar ou criar conta | PareFreio{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <p class="eyebrow">Conta PareFreio</p>
+    <h1>Entre ou crie sua conta</h1>
+    <p>O catálogo continua aberto para todos. A conta é opcional e permite acompanhar seu acesso em futuras melhorias.</p>
+</section>
+
+<section class="section auth-layout">
+    <form class="auth-card" data-auth-login>
+        <p class="eyebrow">Já tem cadastro?</p>
+        <h2>Entrar</h2>
+        <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+        <label>Senha<input name="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <button class="btn primary" type="submit">Entrar</button>
+        <button class="text-button" type="button" data-password-reset>Esqueci minha senha</button>
+        <p class="form-status" data-login-status role="status" aria-live="polite"></p>
+    </form>
+
+    <form class="auth-card" data-auth-signup>
+        <p class="eyebrow">Acesso opcional</p>
+        <h2>Criar conta</h2>
+        <label>Nome<input name="name" autocomplete="name" required maxlength="120"></label>
+        <label>E-mail<input name="email" type="email" autocomplete="email" required></label>
+        <label>Senha<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn primary" type="submit">Criar minha conta</button>
+        <p class="form-status" data-signup-status role="status" aria-live="polite"></p>
+    </form>
+
+    <form class="auth-card password-update-card" data-password-update hidden>
+        <p class="eyebrow">Segurança</p>
+        <h2>Definir nova senha</h2>
+        <label>Nova senha<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn primary" type="submit">Salvar nova senha</button>
+        <p class="form-status" data-password-status role="status" aria-live="polite"></p>
+    </form>
+</section>
+{% endblock %}

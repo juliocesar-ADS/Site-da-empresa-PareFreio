@@ -269,6 +269,16 @@ def chatbot():
     return render_template("chatbot.html")
 
 
+@app.route("/conta")
+def conta():
+    return render_template("conta.html")
+
+
+@app.route("/admin")
+def admin():
+    return render_template("admin.html")
+
+
 @app.post("/api/contato")
 def api_contato():
     data = request.get_json(silent=True) or request.form.to_dict()

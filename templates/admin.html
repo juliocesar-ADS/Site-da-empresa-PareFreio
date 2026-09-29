@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Painel do dono | PareFreio{% endblock %}
+
+{% block content %}
+<section class="page-hero admin-hero">
+    <p class="eyebrow">Área restrita</p>
+    <h1>Painel do dono</h1>
+    <p>Cadastre e atualize as peças. As mudanças aprovadas aparecem no catálogo público.</p>
+</section>
+
+<section class="section admin-layout" data-admin-panel hidden>
+    <form class="admin-form" data-product-form>
+        <input type="hidden" name="id">
+        <div class="admin-form-heading">
+            <div>
+                <p class="eyebrow">Catálogo online</p>
+                <h2 data-product-form-title>Cadastrar peça</h2>
+            </div>
+            <button class="text-button" type="button" data-product-cancel hidden>Cancelar edição</button>
+        </div>
+        <label>Nome da peça<input name="name" maxlength="160" required></label>
+        <label>Categoria<input name="category" maxlength="80" placeholder="Ex.: Freios" required></label>
+        <label>Preço (R$)<input name="price" type="number" min="0" step="0.01" required></label>
+        <label>Sobre o produto<textarea name="description" maxlength="3000" required></textarea></label>
+        <label>Compatibilidade / aplicação<input name="compatibility" maxlength="500" placeholder="Modelo, ano, motorização"></label>
+        <label>Foto do produto<input name="image" type="file" accept="image/jpeg,image/png,image/webp"></label>
+        <p class="image-hint" data-current-image></p>
+        <button class="btn primary" type="submit" data-product-submit>Publicar peça</button>
+        <p class="form-status" data-admin-status role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="admin-products">
+        <div class="admin-form-heading">
+            <div>
+                <p class="eyebrow">Visível no site</p>
+                <h2>Peças cadastradas</h2>
+            </div>
+            <button class="btn ghost compact" type="button" data-auth-logout>Sair</button>
+        </div>
+        <p class="form-status" data-admin-list-status role="status" aria-live="polite"></p>
+        <div class="admin-product-list" data-admin-products></div>
+        <div class="admin-leads">
+            <div class="admin-form-heading">
+                <div>
+                    <p class="eyebrow">Atendimento</p>
+                    <h2>Pedidos recebidos</h2>
+                </div>
+            </div>
+            <p class="form-status" data-admin-leads-status role="status" aria-live="polite"></p>
+            <div class="admin-lead-list" data-admin-leads></div>
+        </div>
+    </div>
+</section>
+<section class="section auth-required" data-admin-locked>
+    <h2>Entre com a conta autorizada do dono</h2>
+    <p>Esta área é protegida. Clientes podem continuar usando o catálogo sem entrar.</p>
+    <a class="btn primary" href="{{ url_for('conta') }}">Ir para entrar</a>
+    <p class="form-status" data-admin-auth-status role="status" aria-live="polite"></p>
+</section>
+{% endblock %}

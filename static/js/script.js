@@ -7,10 +7,10 @@ if (navToggle && nav) {
 
 const productSearch = document.querySelector("[data-product-search]");
 const productCategory = document.querySelector("[data-product-category]");
-const productCards = [...document.querySelectorAll("[data-product-card]")];
 const productEmpty = document.querySelector("[data-product-empty]");
 
 function filterProducts() {
+    const productCards = [...document.querySelectorAll("[data-product-card]")];
     if (!productCards.length) return;
 
     const search = (productSearch?.value || "").trim().toLowerCase();
@@ -28,6 +28,7 @@ function filterProducts() {
     if (productEmpty) productEmpty.hidden = visible > 0;
 }
 
+window.filterPareFreioProducts = filterProducts;
 productSearch?.addEventListener("input", filterProducts);
 productCategory?.addEventListener("change", filterProducts);
 
@@ -37,7 +38,7 @@ if (window.AOS) {
 
 const contactForm = document.querySelector("[data-contact-form]");
 
-if (contactForm) {
+if (contactForm && !window.PAREFREIO_STATIC_SITE) {
     contactForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const status = document.querySelector("[data-form-status]");

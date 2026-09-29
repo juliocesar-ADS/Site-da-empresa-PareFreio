@@ -1,6 +1,8 @@
-from pathlib import Path
+import json
+import os
 import shutil
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -15,13 +17,15 @@ PAGES = {
     "servicos": "/servicos",
     "contato": "/contato",
     "chatbot": "/chatbot",
+    "conta": "/conta",
+    "admin": "/admin",
 }
 
 
 def rewrite_links(html, prefix):
     html = html.replace('href="/static/', f'href="{prefix}static/')
     html = html.replace('src="/static/', f'src="{prefix}static/')
-    for route in ("produtos", "servicos", "contato", "chatbot"):
+    for route in ("produtos", "servicos", "contato", "chatbot", "conta", "admin"):
         html = html.replace(f'href="/{route}"', f'href="{prefix}{route}/"')
     html = html.replace('href="/"', f'href="{prefix}"')
     return html
@@ -32,6 +36,18 @@ def main():
         shutil.rmtree(OUTPUT)
     OUTPUT.mkdir()
     shutil.copytree(ROOT / "static", OUTPUT / "static")
+    config = {
+        "url": os.environ.get("SUPABASE_URL", ""),
+        "anonKey": os.environ.get("SUPABASE_ANON_KEY", ""),
+    }
+    config_path = OUTPUT / "static" / "js" / "supabase-config.js"
+    config_path.write_text(
+        "window.PAREFREIO_STATIC_SITE = true;\n"
+        "window.PAREFREIO_SUPABASE = "
+        + json.dumps(config, ensure_ascii=True)
+        + ";\n",
+        encoding="utf-8",
+    )
 
     client = app.test_client()
     for folder, route in PAGES.items():

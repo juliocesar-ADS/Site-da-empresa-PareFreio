@@ -79,7 +79,7 @@
         <p class="eyebrow">Produtos em destaque</p>
         <h2>Peças procuradas pelos clientes</h2>
     </div>
-    <div class="product-grid">
+    <div class="product-grid" data-products-live data-featured-products>
         {% for product in products %}
         <article class="product-card" data-aos="fade-up">
             <div class="product-img">{{ product.category }}</div>
@@ -90,6 +90,7 @@
         </article>
         {% endfor %}
     </div>
+    <p class="form-status catalog-status" data-catalog-status role="status" aria-live="polite"></p>
 </section>
 
 <section class="section">

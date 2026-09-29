@@ -10,6 +10,7 @@
 </section>
 
 <section class="section">
+    <p class="form-status catalog-status" data-catalog-status role="status" aria-live="polite"></p>
     <div class="catalog-toolbar" aria-label="Filtros do catálogo">
         <label class="catalog-search">
             Buscar peça
@@ -25,7 +26,7 @@
             </select>
         </label>
     </div>
-    <div class="product-grid" data-product-grid>
+    <div class="product-grid" data-product-grid data-products-live>
         {% for product in products %}
         <article class="product-card" data-aos="fade-up" data-product-card data-category="{{ product.category }}" data-name="{{ product.name | lower }}">
             <div class="product-img">{{ product.category }}</div>
