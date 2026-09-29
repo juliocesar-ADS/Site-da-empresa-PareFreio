@@ -37,8 +37,8 @@ def main():
     OUTPUT.mkdir()
     shutil.copytree(ROOT / "static", OUTPUT / "static")
     config = {
-        "url": os.environ.get("SUPABASE_URL", ""),
-        "anonKey": os.environ.get("SUPABASE_ANON_KEY", ""),
+        "url": os.environ.get("SUPABASE_URL") or "https://lbwwwfgydqssjrkfzqyn.supabase.co",
+        "anonKey": os.environ.get("SUPABASE_ANON_KEY") or "sb_publishable_6xgIC7NugfEjDEYeOiV56w_Nbz9VXc_",
     }
     config_path = OUTPUT / "static" / "js" / "supabase-config.js"
     config_path.write_text(

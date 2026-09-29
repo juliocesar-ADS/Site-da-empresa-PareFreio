@@ -385,6 +385,8 @@ async function syncSession(session) {
 
     const panel = document.querySelector("[data-admin-panel]");
     const locked = document.querySelector("[data-admin-locked]");
+    const passwordForm = document.querySelector("[data-password-update]");
+    if (passwordForm && ownerUser) passwordForm.hidden = false;
     if (!panel || !locked) return;
 
     panel.hidden = !ownerUser;

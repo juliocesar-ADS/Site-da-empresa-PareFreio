@@ -45,8 +45,8 @@ Abra `http://127.0.0.1:5000`.
 
 Sem MySQL configurado, a execução Flask local cria automaticamente
 `database/parefreio.sqlite3`, carrega o catálogo inicial e salva os pedidos
-localmente. O login, o painel do dono e a sincronização online são ativados
-quando o Supabase estiver configurado na publicação GitHub Pages.
+localmente. O login, o painel do dono e a sincronização online usam o projeto
+Supabase gratuito configurado para o site publicado.
 
 ---
 
@@ -65,23 +65,19 @@ quando as credenciais MySQL não estiverem configuradas.
 
 ### Banco online do site publicado (Supabase)
 
-1. Crie um projeto Supabase e abra o **SQL Editor**.
-2. Execute todo o conteúdo de [`database/supabase.sql`](./database/supabase.sql).
-   O script cria as tabelas, políticas de acesso, bucket público de fotos e peças
-   iniciais. As peças sem preço informado aparecem como “Consulte o preço”.
-3. No GitHub, abra **Settings > Secrets and variables > Actions > Variables** e
-   crie `SUPABASE_URL` e `SUPABASE_ANON_KEY` com os dados de **Project Settings >
-   API** do Supabase. Use somente a chave pública `anon`/publishable. Nunca use
-   nem publique a `service_role` key.
-4. Em **Authentication > URL Configuration** no Supabase, configure o URL do
-   site como `https://juliocesar-ads.github.io/Site-da-empresa-PareFreio/` e
-   inclua esse endereço e `https://juliocesar-ads.github.io/**` na lista de
-   redirecionamentos permitidos.
-5. Faça um push na branch `main` para publicar a configuração do Supabase.
-6. Acesse `/conta/` no site, crie a conta do dono e confirme o e-mail, se
-   solicitado.
-7. No SQL Editor do Supabase, autorize somente essa conta como dona, substituindo
-   o e-mail:
+O projeto gratuito `parefreio-site` está configurado na região de São Paulo.
+Seu schema já foi aplicado, com políticas de segurança, bucket de fotos e peças
+iniciais sem preço informado. A chave incorporada ao site é uma chave pública
+publishable e foi verificada contra a API do catálogo; não inclua chaves secretas
+ou `service_role` no frontend.
+
+O link de convite de acesso do dono foi enviado ao e-mail de publicação do
+repositório. Depois de aceitar o convite, o usuário poderá definir a senha em
+`/conta/`; a página de autenticação volta diretamente para essa rota. O acesso
+ao painel já está autorizado somente para o usuário convidado.
+
+Para autorizar uma conta de dono adicional, crie a conta e rode no SQL Editor,
+substituindo o e-mail:
 
    ```sql
    INSERT INTO public.site_owners (user_id)
@@ -104,8 +100,8 @@ só podem ser lidos pelo dono.
 ## 🚀 Publicação
 
 O workflow em `.github/workflows/pages.yml` gera as páginas estáticas e publica
-automaticamente no GitHub Pages a cada push em `main`. Adicione as variáveis
-Supabase descritas acima ao repositório para ativar o catálogo online e o login.
+automaticamente no GitHub Pages a cada push em `main`. O catálogo busca dados do
+Supabase em tempo real; cadastrar ou editar um produto não exige novo deploy.
 
 ---
 
