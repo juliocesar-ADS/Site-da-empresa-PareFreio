@@ -7,30 +7,54 @@ if (navToggle && nav) {
 
 const productSearch = document.querySelector("[data-product-search]");
 const productCategory = document.querySelector("[data-product-category]");
+const productSort = document.querySelector("[data-product-sort]");
 const productEmpty = document.querySelector("[data-product-empty]");
+const productCount = document.querySelector("[data-product-count]");
 
 function filterProducts() {
-    const productCards = [...document.querySelectorAll("[data-product-card]")];
+    const catalogGrid = document.querySelector("[data-marketplace-catalog]");
+    const productCards = [...(catalogGrid || document).querySelectorAll("[data-product-card]")];
     if (!productCards.length) return;
 
-    const search = (productSearch?.value || "").trim().toLowerCase();
+    const search = (productSearch?.value || "").trim().toLocaleLowerCase("pt-BR");
     const category = productCategory?.value || "";
-    let visible = 0;
-
-    productCards.forEach((card) => {
-        const matchesSearch = !search || card.dataset.name.includes(search);
+    const sort = productSort?.value || "recent";
+    const matches = productCards.filter((card) => {
+        const searchableText = card.dataset.search || card.dataset.name || "";
+        const matchesSearch = !search || searchableText.includes(search);
         const matchesCategory = !category || card.dataset.category === category;
-        const shouldShow = matchesSearch && matchesCategory;
-        card.hidden = !shouldShow;
-        if (shouldShow) visible += 1;
+        return matchesSearch && matchesCategory;
     });
 
-    if (productEmpty) productEmpty.hidden = visible > 0;
+    if (catalogGrid) {
+        matches.sort((left, right) => {
+            if (sort === "price-asc" || sort === "price-desc") {
+                const leftPrice = left.dataset.price === "" || left.dataset.price === undefined ? null : Number(left.dataset.price);
+                const rightPrice = right.dataset.price === "" || right.dataset.price === undefined ? null : Number(right.dataset.price);
+                if (leftPrice === null) return rightPrice === null ? 0 : 1;
+                if (rightPrice === null) return -1;
+                return sort === "price-asc" ? leftPrice - rightPrice : rightPrice - leftPrice;
+            }
+            if (sort === "name") return (left.dataset.name || "").localeCompare(right.dataset.name || "", "pt-BR");
+            return (right.dataset.createdAt || "").localeCompare(left.dataset.createdAt || "");
+        });
+        matches.forEach((card) => catalogGrid.append(card));
+    }
+
+    const visibleSet = new Set(matches);
+    productCards.forEach((card) => { card.hidden = !visibleSet.has(card); });
+    if (productEmpty) productEmpty.hidden = matches.length > 0;
+    if (productCount) {
+        const count = matches.length;
+        productCount.textContent = `${count} ${count === 1 ? "anúncio encontrado" : "anúncios encontrados"}`;
+    }
 }
 
 window.filterPareFreioProducts = filterProducts;
 productSearch?.addEventListener("input", filterProducts);
 productCategory?.addEventListener("change", filterProducts);
+productSort?.addEventListener("change", filterProducts);
+filterProducts();
 
 if (window.AOS) {
     AOS.init({ duration: 700, once: true, offset: 80 });

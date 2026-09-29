@@ -254,6 +254,13 @@ def produtos():
     return render_template("produtos.html", products=products, categories=categories)
 
 
+@app.route("/anuncios")
+def anuncios():
+    products = get_products()
+    categories = sorted({product["category"] for product in products})
+    return render_template("anuncios.html", products=products, categories=categories)
+
+
 @app.route("/servicos")
 def servicos():
     return render_template("servicos.html", services=SERVICES)

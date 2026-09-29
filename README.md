@@ -20,6 +20,7 @@ https://juliocesar-ads.github.io/Site-da-empresa-PareFreio/
 | --- | --- |
 | 🏠 Home premium | Landing page responsiva e otimizada para conversão |
 | 🛒 Catálogo online | Produtos com busca, filtro, preço e fotos sincronizados pelo Supabase |
+| 🏷️ Vitrine de anúncios | Página independente com grade compacta, busca, categorias e ordenação |
 | 🔐 Conta opcional | Clientes navegam sem login e podem criar conta ou entrar |
 | 🧰 Painel do dono | Criação, edição e exclusão protegidas de produtos |
 | 🖼️ Fotos de produtos | Upload online JPG, PNG ou WebP de até 5 MB |
@@ -92,8 +93,9 @@ sem login; cadastro e acesso são opcionais.
 
 O frontend usa a chave pública do Supabase, enquanto o Row Level Security do
 schema restringe gravações de produtos e fotos aos usuários cadastrados em
-`site_owners`. O formulário de contato aceita visitantes sem conta, e os pedidos
-só podem ser lidos pelo dono.
+`site_owners`. Os anúncios publicados aparecem na página `/anuncios/`, separada
+do catálogo institucional, e atualizam sem novo deploy. O formulário de contato
+aceita visitantes sem conta, e os pedidos só podem ser lidos pelo dono.
 
 ---
 

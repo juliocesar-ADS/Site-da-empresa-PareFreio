@@ -13,6 +13,7 @@ from app import app
 OUTPUT = ROOT / "_site"
 PAGES = {
     "": "/",
+    "anuncios": "/anuncios",
     "produtos": "/produtos",
     "servicos": "/servicos",
     "contato": "/contato",
@@ -25,7 +26,7 @@ PAGES = {
 def rewrite_links(html, prefix):
     html = html.replace('href="/static/', f'href="{prefix}static/')
     html = html.replace('src="/static/', f'src="{prefix}static/')
-    for route in ("produtos", "servicos", "contato", "chatbot", "conta", "admin"):
+    for route in ("anuncios", "produtos", "servicos", "contato", "chatbot", "conta", "admin"):
         html = html.replace(f'href="/{route}"', f'href="{prefix}{route}/"')
     html = html.replace('href="/"', f'href="{prefix}"')
     return html

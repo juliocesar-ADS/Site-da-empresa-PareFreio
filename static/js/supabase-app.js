@@ -30,7 +30,7 @@ function formatPrice(price) {
     return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(price));
 }
 
-function productCard(product, compact = false) {
+function productCard(product, compact = false, marketplace = false) {
     const name = escapeHtml(product.name);
     const category = escapeHtml(product.category);
     const image = product.image_url
@@ -39,14 +39,22 @@ function productCard(product, compact = false) {
     const description = escapeHtml(product.description);
     const compatibility = escapeHtml(product.compatibility || "Consulte a aplicação para o seu veículo.");
     const message = encodeURIComponent(`Olá, tenho interesse em ${product.name}. Meu veículo é: `);
+    const searchText = escapeHtml(`${product.name} ${product.category} ${product.description} ${product.compatibility || ""}`.toLocaleLowerCase("pt-BR"));
+    const parsedPrice = product.price === null || product.price === undefined || product.price === ""
+        ? null
+        : Number(product.price);
+    const price = parsedPrice !== null && Number.isFinite(parsedPrice) ? parsedPrice : "";
+    const createdAt = escapeHtml(product.created_at || "");
     return `
-        <article class="product-card live-product-card" data-aos="fade-up" data-product-card data-category="${category}" data-name="${name.toLocaleLowerCase("pt-BR")}">
+        <article class="product-card live-product-card${marketplace ? " marketplace-card" : ""}" data-aos="fade-up" data-product-card data-category="${category}" data-name="${name.toLocaleLowerCase("pt-BR")}" data-search="${searchText}" data-price="${price}" data-created-at="${createdAt}">
             <div class="product-img${product.image_url ? " has-image" : ""}">${image}</div>
-            <p class="product-category">${category}</p>
-            <h2>${name}</h2>
-            ${compact ? "" : `<p>${description}</p><small>${compatibility}</small>`}
-            <strong class="product-price">${formatPrice(product.price)}</strong>
-            <a class="btn primary compact" href="https://api.whatsapp.com/send?phone=5511962658271&amp;text=${message}" target="_blank" rel="noopener noreferrer">Consultar peça</a>
+            <div class="${marketplace ? "marketplace-card-content" : ""}">
+                <p class="product-category">${category}</p>
+                <h2>${name}</h2>
+                ${compact ? "" : `<p${marketplace ? ' class="marketplace-description"' : ""}>${description}</p><small>${compatibility}</small>`}
+                <strong class="product-price">${formatPrice(product.price)}</strong>
+                <a class="btn primary compact" href="https://api.whatsapp.com/send?phone=5511962658271&amp;text=${message}" target="_blank" rel="noopener noreferrer">${marketplace ? "Consultar anúncio" : "Consultar peça"}</a>
+            </div>
         </article>
     `;
 }
@@ -55,7 +63,8 @@ function renderCatalog(products) {
     currentProducts = products;
     document.querySelectorAll("[data-products-live]").forEach((grid) => {
         const displayed = grid.hasAttribute("data-featured-products") ? products.slice(0, 4) : products;
-        grid.innerHTML = displayed.map((product) => productCard(product, grid.hasAttribute("data-featured-products"))).join("");
+        const marketplace = grid.hasAttribute("data-marketplace-catalog");
+        grid.innerHTML = displayed.map((product) => productCard(product, grid.hasAttribute("data-featured-products"), marketplace)).join("");
     });
 
     const category = document.querySelector("[data-product-category]");
