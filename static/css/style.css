@@ -863,10 +863,13 @@ textarea { min-height: 140px; resize: vertical; }
     }
 
     .whatsapp-float::after {
+        position: absolute;
+        inset: 0;
+        margin: auto;
         content: "";
         display: block;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         background: url("../img/whatsapp.svg") center / contain no-repeat;
     }
 }
